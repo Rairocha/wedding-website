@@ -59,50 +59,41 @@ router.post('/signup', (req, res, next) => {
   })
 });
 
-router.get('/userProfile', (req, res) => res.render('users/user-profile'));
-
-module.exports = router;
-
-/*
+router.get('/userProfile', (req, res) => res.render('users/user-profile',{user:req.session.user}));
 
 router.get('/login', (req, res, next) => {
-    res.render('auth/login.hbs')
+  res.render('auth/login.hbs')
 })
 
 router.post('/login', (req, res, next) => {
-    console.log('SESSION =====> ', req.session);
-    const { username, password } = req.body;
-   
-    if (username === '' || password === '') {
-      res.render('auth/login.hbs', {
-        errorMessage: 'Please enter both username and password to login.'
-      });
-      return;
-    }
-   
-    User.findOne({ username })
-      .then(user => {
-        if (!user) {
-          console.log("Email not registered. ");
-          res.render('auth/login.hbs', { errorMessage: 'User not found and/or incorrect password.' });
-          return;
-        } else if (
-          bcrypt.compareSync(password, user.password)) {
-          
-          req.session.user = user  
-  
-          console.log("Sessions after login:", req.session)
-  
-          res.redirect('/')
-        } else {
-          console.log("Incorrect password. ");
-          res.render('auth/login.hbs', { errorMessage: 'User not found and/or incorrect password.' });
-        }
-      })
-      .catch(error => next(error));
+  console.log('SESSION =====> ', req.session);
+  const { email, password } = req.body;
+ 
+  if (email === '' || password === '') {
+    res.render('auth/login', {
+      errorMessage: 'Please enter both, email and password to login.'
+    });
+    return;
+  }
+  User.findOne({ email })
+    .then(user => {
+      if (!user) {
+        res.render('auth/login', { errorMessage: 'User not found and/or incorrect password.' });
+        return;
+      } else if (bcrypt.compareSync(password, user.passwordHash)) {
+        req.session.user = user 
+        res.render('users/user-profile', { user });
+      } else {
+        res.render('auth/login', { errorMessage: 'User not found and/or incorrect password.' });
+      }
+    })
+    .catch(error => next(error));
+});
+
+router.post('/logout', (req, res, next) => {
+  req.session.destroy(err => {
+    if (err) next(err);
+    res.redirect('/');
   });
-
-
-
+});
 module.exports = router;
-*/
