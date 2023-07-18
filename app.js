@@ -51,6 +51,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/',authRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -67,6 +68,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
 
 mongoose
   .connect(process.env.MONGODB_URI)
