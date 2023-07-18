@@ -4,11 +4,12 @@ var router = express.Router();
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
+const { isLoggedIn, isLoggedOut } = require('../middleware/route-guard.js');
 
 const salt= 10;
 
 /* GET signup page. */
-router.get('/signup', (req, res, next) => {
+router.get('/signup', isLoggedOut, (req, res, next) => {
   res.render('auth/signup.hbs')
 })
 
@@ -59,7 +60,7 @@ router.post('/signup', (req, res, next) => {
   })
 });
 
-router.get('/userProfile', (req, res) => res.render('users/user-profile',{user:req.session.user}));
+router.get('/userProfile',isLoggedIn, (req, res) => res.render('users/user-profile',{user:req.session.user}));
 
 router.get('/login', (req, res, next) => {
   res.render('auth/login.hbs')
