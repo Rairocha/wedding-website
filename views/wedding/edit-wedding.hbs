@@ -1,0 +1,25 @@
+<h2>Edit Wedding</h2>
+
+<form action="/wedding/edit/{{_id}}" method="post">
+
+    <label for="name">Name</label>
+    <input id="name" type="text" name="name" value="{{name}}">
+
+    <label for="description">Description</label>
+    <input id="description" type="text" name="description"value="{{description}}">
+
+    <label for="imageUrl">Image</label>
+    <input id="imageUrl" type="text" name="imageUrl" value="{{imageUrl}}">
+
+    <label for="location">Location</label>
+    <input id="location" type="text" name="location" value="{{location}}">
+
+    <label for="date">Date</label>
+    <input id="date" type="date" name="date" value="{{date}}">
+
+    <label for="time">Time</label>
+    <input id="time" type="time" name="time" value="{{time}}">
+
+    <button type="submit">Edit Wedding</button>
+
+</form>
