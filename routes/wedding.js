@@ -8,9 +8,9 @@ const { isLoggedIn, isLoggedOut ,isOwner } = require('../middleware/route-guard.
 
 
 router.get('/', isLoggedIn,(req, res, next) => {
-    Wedding.find({owner:req.session.user._id})
+    Wedding.find() //find({owner:req.session.user._id})
     .then((foundWedding) => {       
-        res.render('wedding/all-weddings.hbs', { rooms: foundWedding })
+        res.render('wedding/all-weddings.hbs', { weddings: foundWedding })
     })
     .catch((err) => {
         console.log(err)
@@ -47,7 +47,7 @@ router.post('/create', isLoggedIn, (req, res, next) => {
 })
 
 router.get('/details/:weddingId', (req, res, next) => {
-
+    console.log(req.params.weddingId)
     Wedding.findById(req.params.weddingId)
     .then((foundWedding) => {
         console.log("Found Wedding", foundWedding)
@@ -77,19 +77,19 @@ router.get('/edit/:weddingId', isLoggedIn, isOwner, (req, res, next) => {
 router.post('/edit/:weddingId', isLoggedIn, isOwner, (req, res, next) => {
 
     const {name, description,imageUrl,location,date,time} = req.body
-
-    Wedding.create({
-        name,
-        description,
-        imageUrl,
-        location,
-        date,
-        time,
-        owner: [req.session.user._id]
-    })
+    console.log(date)
+    Wedding.findByIdAndUpdate(req.params.weddingId,{
+        name:name,
+        description:description,
+        imageUrl:imageUrl,
+        location:location,
+        date:date,
+        time:time
+        // owner: [req.session.user._id]
+    },{new:true})
     .then((updatedWedding) => {
         console.log("Updated Wedding:", updatedWedding)
-        res.redirect(`/wedding/details/${updatedWedding._id}`)
+        res.redirect(`/wedding/details/${req.params.weddingId}`)
     })
     .catch((err) => {
         console.log(err)

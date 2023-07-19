@@ -1,5 +1,6 @@
 // middleware/route-guard.js
 const Wedding = require('../models/Wedding');
+const mongoose = require('mongoose');
 // checks if the user is logged in when trying to access a specific page
 const isLoggedIn = (req, res, next) => {
     if (!req.session.user) {
@@ -21,7 +22,7 @@ const isLoggedIn = (req, res, next) => {
 
     Wedding.findById(req.params.weddingId)
     .then((foundWedding) => {
-        if(req.session.user._id in foundWedding.owner) {
+        if(foundWedding.owner.includes(req.session.user._id)) {
             next()
         } else {
             res.redirect('/wedding')
