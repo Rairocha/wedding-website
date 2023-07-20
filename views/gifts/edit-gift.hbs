@@ -1,21 +1,21 @@
 <h2>Edit Gift</h2>
 
-<form action="/registry/edit/{{_id}}" method="post">
+<form action="/registry/edit/{{foundGift._id}}" method="post">
 
     <label for="name">Name</label>
-    <input id="name" type="text" name="name" value="{{name}}">
+    <input id="name" type="text" name="name" value="{{foundGift.name}}">
 
     <label for="description">Description</label>
-    <input id="description" type="text" name="description"value="{{description}}">
+    <input id="description" type="text" name="description"value="{{foundGift.description}}">
 
     <label for="price">Price</label>
-    <input id="price" type="number" name="price" min="0.00" step="0.01" value="{{price}}">
+    <input id="price" type="number" name="price" min="0.00" step="0.01" value="{{foundGift.price}}">
 
     <label for="imageUrl">Image</label>
-    <input id="imageUrl" type="text" name="imageUrl" value="{{imageUrl}}">
+    <input id="imageUrl" type="text" name="imageUrl" value="{{foundGift.imageUrl}}">
 
     <label for="quantity">Quantity</label>
-    <input id="quantity" type="number" min="0" step="1" name="quantity" value="{{quantity}}">
+    <input id="quantity" type="number" min="{{minAmount}}" step="1" name="quantity" value="{{foundGift.quantity}}">
 
     <button type="submit">Edit Gift</button>
 

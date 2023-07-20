@@ -59,7 +59,12 @@ router.post('/create/:weddingId', isLoggedIn,(req, res, next) => {
 router.get('/edit/:giftId', isLoggedIn, (req, res, next) => {
     Gift.findById(req.params.giftId)
     .then((foundGift) => {
-        res.render('gifts/edit-gift.hbs', foundGift)
+        var minAmount;
+        if(foundGift.buyers){
+            minAmount = foundGift.buyers.length
+        }
+        else{minAmount=0}
+        res.render('gifts/edit-gift.hbs', {foundGift: foundGift,minAmount:minAmount})
     })
     .catch((err) => {
         console.log(err)
