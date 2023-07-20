@@ -1,3 +1,7 @@
+var FileReader = require('filereader');
+var fapi = require('file-api');
+
+
 var express = require('express');
 var router = express.Router();
 
@@ -10,13 +14,26 @@ const { isLoggedIn, isLoggedOut ,isOwner } = require('../middleware/route-guard.
 router.get('/', isLoggedIn,(req, res, next) => {
     Wedding.find({owner:req.session.user._id})
     .then((foundWedding) => {       
-        res.render('wedding/all-weddings.hbs', { weddings: foundWedding })
+        res.render('wedding/all-weddings.hbs', { weddings: foundWedding, showNew:true})
     })
     .catch((err) => {
         console.log(err)
         next(err)
     })
 });
+
+router.get('/guest', isLoggedIn,(req, res, next) => {
+    console.log(req.session.user.email)
+    Wedding.find({guests:req.session.user.email})
+    .then((foundWedding) => {       
+        res.render('wedding/all-weddings.hbs', { weddings: foundWedding, showNew:false})
+    })
+    .catch((err) => {
+        console.log(err)
+        next(err)
+    })
+});
+
 router.get('/create', isLoggedIn, (req, res, next) => {
     res.render('wedding/create-wedding.hbs')
 })
@@ -114,5 +131,66 @@ router.get('/delete/:weddingId', isLoggedIn, isOwner, (req, res, next) => {
     })
 
 })
+
+router.get('/add-guests/:weddingId',isLoggedIn, isOwner,(req, res, next) => {
+    
+    Wedding.findById(req.params.weddingId)
+    .then((addGuestWedding) => {
+        console.log("Wedding to add:", addGuestWedding)
+        res.render('wedding/add-guests.hbs',addGuestWedding)
+    })
+    .catch((err) => {
+        console.log(err)
+        next(err)
+    })
+})
+
+router.post('/add-guests/:weddingId',isLoggedIn, isOwner,(req, res, next) => {
+    
+    Wedding.findById(req.params.weddingId)
+    .then((addGuestWedding) => {
+        var listGuests = req.body.guests.toString().match(/^\S+@\S+\.\S+$/gm);
+        listGuests.forEach(element => { addGuestWedding.guests.push(element)});
+        
+        addGuestWedding.guests = [... new Set(addGuestWedding.guests)];
+        return addGuestWedding.save()         
+        })
+    .then((addGuestWedding) => {
+        res.render('wedding/add-guests.hbs',addGuestWedding)
+    })
+    .catch((err) => {
+        console.log(err)
+        next(err)
+    })
+})
+
+router.get('/edit-guests/:weddingId',isLoggedIn, isOwner,(req, res, next) => {
+    
+    Wedding.findById(req.params.weddingId)
+    .then((addGuestWedding) => {
+        console.log("Wedding to add:", {...addGuestWedding.guests})
+        res.render('wedding/edit-guests.hbs',{guests:{...addGuestWedding.guests},_id:req.params.weddingId})
+    })
+    .catch((err) => {
+        console.log(err)
+        next(err)
+    })
+})
+router.post('/edit-guests/:weddingId',isLoggedIn, isOwner,(req, res, next) => {
+    console.log(Object.values(req.body))
+    Wedding.findById(req.params.weddingId)
+    .then((addGuestWedding) => {
+        addGuestWedding.guests = [... new Set(Object.values(req.body))];
+        return addGuestWedding.save()         
+        })
+    .then((addGuestWedding) => {
+        res.redirect(`/wedding/details/${req.params.weddingId}`)
+        })
+    .catch((err) => {
+        console.log(err)
+        next(err)
+    })
+})
+
 
 module.exports = router;

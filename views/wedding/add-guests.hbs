@@ -1,0 +1,12 @@
+<h2>Add Guests</h2>
+
+<form action="/wedding/add-guests/{{_id}}" method="post">
+
+    <label for="guests">Guest List</label>
+    </br>
+    <!--input id="guests" type="file" name="guests"  accept=".txt"-->
+    <textarea id="guests" name="guests"  rows="10" cols="50">Write emails of guests here</textarea>
+    <button type="submit">Add guests</button>
+
+</form>
+<a href="/wedding/edit-guests/{{_id}}">Edit Guests</a>

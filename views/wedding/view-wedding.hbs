@@ -13,8 +13,9 @@
 <p>Date: {{foundWedding.date}}</p>
 <p>Time: {{foundWedding.time}}</p>
 {{#if showEdit}}
-<a href="/wedding/edit/{{foundWedding._id}}">Edit Wedding</a>
-<a href="/wedding/delete/{{foundWedding._id}}">Delete Wedding</a>
+<button><a href="/wedding/add-guests/{{foundWedding._id}}">Guest List</a></button>
+<button><a href="/wedding/edit/{{foundWedding._id}}">Edit Wedding</a></button>
+<button><a href="/wedding/delete/{{foundWedding._id}}">Delete Wedding</a></button>
 
 {{/if}}
 <br>

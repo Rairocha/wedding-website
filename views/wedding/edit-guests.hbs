@@ -1,0 +1,10 @@
+<h2>Edit Guests</h2>
+
+<form action="/wedding/edit-guests/{{_id}}" method="post">
+{{#each guests}}
+    <label for={{this}}>Edit guest e-mail</label>
+    <input name={{this}} value={{this}}>
+    </br>
+{{/each}}
+<button type="submit">Edit guests</button>
+</form>

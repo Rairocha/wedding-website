@@ -1,7 +1,12 @@
-<h2>All Weddings</h2>
+
+{{#if showNew}}
+<h2>Your Weddings</h2>
 <button>
     <a href="/wedding/create">New wedding</a>
 </button>
+{{else}}
+<h2>Weddings you've been invited to</h2>
+{{/if}}
 {{#each weddings}}
 
     <a href="/wedding/details/{{_id}}">

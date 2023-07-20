@@ -12,12 +12,12 @@ router.get('/:weddingId', isLoggedIn,(req, res, next) => {
     .then(foundWedding=>{
     Gift.find({wedding:req.params.weddingId})
     .populate('wedding')
-    .then((foundGift) => {    
-        console.log(foundGift);
+    .then((foundGift) => {
         res.render('gifts/gifts-page.hbs',
         {foundGift:foundGift,
         showEdit:foundWedding.owner.includes(req.session.user._id),
-        weddingId:req.params.weddingId} )
+        weddingId:req.params.weddingId,
+        totalGift:foundWedding.totalGift} )
     })
     .catch((err) => {
         console.log(err)
@@ -122,8 +122,15 @@ router.get('/buy/:giftId', isLoggedIn,(req, res, next) => {
         return foundGift.save(); 
     })
     .then((foundGift)=>{
-        console.log(foundGift)
-        res.redirect(`/registry/${foundGift.wedding}`)
+        Wedding.findById(foundGift.wedding)
+        .then((foundWedding)=>{
+            console.log(foundWedding)
+            foundWedding.totalGift+=foundGift.price
+            return foundWedding.save();})
+        .then((foundWedding)=>{
+            console.log(foundWedding)
+            res.redirect(`/registry/${foundWedding._id}`)
+        })
     })
     .catch((err) => {
         console.log(err)

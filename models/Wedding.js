@@ -7,7 +7,9 @@ const wedding = new Schema({
     location: String,
     date: Date,
     time: String,
-    owner: [{ type: Schema.Types.ObjectId, ref: "User" }]
+    owner: [{ type: Schema.Types.ObjectId, ref: "User" }],
+    guests: [{type: String}],
+    totalGift: {type: Number, default:0}
   });
 
 module.exports = model('Wedding', wedding);
