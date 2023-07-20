@@ -1,0 +1,38 @@
+<h2>Registry</h2>
+{{#if showEdit}}
+<button>
+    <a href="/registry/create/{{weddingId}}">New gift</a>
+</button>
+{{#each foundGift}}
+    <a href="/registry/details/{{_id}}">
+        <p>{{name}}</p> </a>
+        <button>
+            <a href="/registry/edit/{{_id}}"> Edit</a>
+        </button>
+        <button>
+            <a href="/registry/delete/{{_id}}"> Delete</a>
+        </button>
+        <p>{{description}}</p>
+        <p>$ {{price}}</p>
+        <p>{{availableAmount}}</p>
+        
+    <hr>
+
+{{/each}}
+{{else}}
+{{#each foundGift}}
+    <a href="/registry/details/{{_id}}">
+        <p>{{name}}</p> </a>
+        <p>{{description}}</p>
+        <p>$ {{price}}</p>
+        <p>{{availableAmount}}</p>
+        {{#if availableAmount}}
+        <button>
+            <a href="/registry/buy/{{_id}}"> Buy</a>
+        </button>
+        {{/if}}
+    <hr>
+
+{{/each}}
+{{/if}}
+

@@ -2,13 +2,13 @@ var express = require('express');
 var router = express.Router();
 
 const Wedding = require('../models/Wedding');
-const User = require('../models/User');
+
 const { isLoggedIn, isLoggedOut ,isOwner } = require('../middleware/route-guard.js');
 
 
 
 router.get('/', isLoggedIn,(req, res, next) => {
-    Wedding.find() //find({owner:req.session.user._id})
+    Wedding.find({owner:req.session.user._id})
     .then((foundWedding) => {       
         res.render('wedding/all-weddings.hbs', { weddings: foundWedding })
     })
@@ -18,7 +18,6 @@ router.get('/', isLoggedIn,(req, res, next) => {
     })
 });
 router.get('/create', isLoggedIn, (req, res, next) => {
-    console.log('create wedding clicked')
     res.render('wedding/create-wedding.hbs')
 })
 
@@ -47,11 +46,10 @@ router.post('/create', isLoggedIn, (req, res, next) => {
 })
 
 router.get('/details/:weddingId', (req, res, next) => {
-    console.log(req.params.weddingId)
+    
     Wedding.findById(req.params.weddingId)
     .then((foundWedding) => {
-        console.log("Found Wedding", foundWedding)
-        res.render('wedding/view-wedding.hbs', foundWedding)
+        res.render('wedding/view-wedding.hbs', {foundWedding:foundWedding,showEdit:foundWedding.owner.includes(req.session.user._id)})
     })
     .catch((err) => {
         console.log(err)
@@ -64,8 +62,12 @@ router.get('/edit/:weddingId', isLoggedIn, isOwner, (req, res, next) => {
 
     Wedding.findById(req.params.weddingId)
     .then((foundWedding) => {
-        console.log("Wedding Room", foundWedding)
-        res.render('wedding/edit-wedding.hbs', foundWedding)
+        console.log("Wedding edit", foundWedding.date.getDay())
+        res.render('wedding/edit-wedding.hbs', {foundWedding:foundWedding,
+            dateMonth:(foundWedding.date.getMonth()+1).toString().padStart(2,"0"),
+            dateYear:foundWedding.date.getFullYear(),
+            dateDay:foundWedding.date.getDate().toString().padStart(2,"0")
+        })
     })
     .catch((err) => {
         console.log(err)
@@ -77,7 +79,7 @@ router.get('/edit/:weddingId', isLoggedIn, isOwner, (req, res, next) => {
 router.post('/edit/:weddingId', isLoggedIn, isOwner, (req, res, next) => {
 
     const {name, description,imageUrl,location,date,time} = req.body
-    console.log(date)
+    
     Wedding.findByIdAndUpdate(req.params.weddingId,{
         name:name,
         description:description,

@@ -62,7 +62,7 @@ router.post('/signup', (req, res, next) => {
 
 router.get('/userProfile',isLoggedIn, (req, res) => res.render('users/user-profile',{user:req.session.user}));
 
-router.get('/login', (req, res, next) => {
+router.get('/login',isLoggedOut, (req, res, next) => {
   res.render('auth/login.hbs')
 })
 

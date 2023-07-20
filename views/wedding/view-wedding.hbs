@@ -1,15 +1,21 @@
 <h2>Wedding Details</h2>
-
+<nav>
+    <ul>
+        <li><a href="/wedding/details/{{foundWedding._id}}">Details</a></li>
+        <li><a href="/registry/{{foundWedding._id}}">Gifts</a></li>
+    </ul>
+</nav>
 <!--img src="{{imageUrl}}" alt="wedding-picture"/-->
-<h3>{{name}}</h3>
-<p>{{description}}</p>
+<h3>{{foundWedding.name}}</h3>
+<p>{{foundWedding.description}}</p>
 <br>
-<p>Location: {{location}}</p>
-<p>Date: {{date}}</p>
-<p>Time: {{time}}</p>
+<p>Location: {{foundWedding.location}}</p>
+<p>Date: {{foundWedding.date}}</p>
+<p>Time: {{foundWedding.time}}</p>
+{{#if showEdit}}
+<a href="/wedding/edit/{{foundWedding._id}}">Edit Wedding</a>
+<a href="/wedding/delete/{{foundWedding._id}}">Delete Wedding</a>
 
-<a href="/wedding/edit/{{_id}}">Edit Wedding</a>
-<a href="/wedding/delete/{{_id}}">Delete Wedding</a>
-
+{{/if}}
 <br>
 
