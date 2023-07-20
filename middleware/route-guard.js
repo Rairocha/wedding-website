@@ -35,10 +35,28 @@ const isLoggedIn = (req, res, next) => {
 
 }
 
+const isOwnerOrGuest = (req, res, next) => {
+
+  Wedding.findById(req.params.weddingId)
+  .then((foundWedding) => {
+      if(foundWedding.owner.includes(req.session.user._id)||foundWedding.guests.includes(req.session.user.email)) {
+          next()
+      } else {
+          res.redirect('/wedding')
+      }
+  })
+  .catch((err) => {
+      console.log(err)
+      next(err)
+  })
+
+}
+
   module.exports = {
     isLoggedIn,
     isLoggedOut,
-    isOwner
+    isOwner,
+    isOwnerOrGuest
   };
 
 

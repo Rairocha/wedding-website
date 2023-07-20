@@ -7,7 +7,7 @@ var router = express.Router();
 
 const Wedding = require('../models/Wedding');
 
-const { isLoggedIn, isLoggedOut ,isOwner } = require('../middleware/route-guard.js');
+const { isLoggedIn, isLoggedOut ,isOwner, isOwnerOrGuest } = require('../middleware/route-guard.js');
 
 
 
@@ -62,7 +62,7 @@ router.post('/create', isLoggedIn, (req, res, next) => {
 
 })
 
-router.get('/details/:weddingId', (req, res, next) => {
+router.get('/details/:weddingId', isLoggedIn, isOwnerOrGuest, (req, res, next) => {
     
     Wedding.findById(req.params.weddingId)
     .then((foundWedding) => {

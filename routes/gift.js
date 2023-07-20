@@ -5,7 +5,7 @@ var document
 const Wedding = require('../models/Wedding');
 const Gift = require('../models/Gift');
 
-const { isLoggedIn, isLoggedOut ,isOwner } = require('../middleware/route-guard.js');
+const { isLoggedIn, isLoggedOut ,isOwner, isOwnerOrGuest } = require('../middleware/route-guard.js');
 
 router.get('/:weddingId', isLoggedIn,(req, res, next) => {
     Wedding.findById(req.params.weddingId)
