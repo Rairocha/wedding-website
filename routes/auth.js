@@ -14,10 +14,11 @@ router.get('/signup', isLoggedOut, (req, res, next) => {
 })
 
 router.post('/signup', (req, res, next) => {
-  const { username, email, password } = req.body;
   
-  if (!username || !email || !password) {
-    res.render("auth/signup", {errorMessage: "All fields are mandatory. Please provide your username, email and password."});
+  const { name, email, password } = req.body;
+  
+  if (!name || !email || !password) {
+    res.render("auth/signup", {errorMessage: "All fields are mandatory. Please provide your name, email and password."});
     return;
   }
   
@@ -38,7 +39,7 @@ router.post('/signup', (req, res, next) => {
   /* Creation of user in mongodb database */
     
     .then((hashedPass) =>{
-      return User.create({ username, email , passwordHash: hashedPass })
+      return User.create({ name, email , passwordHash: hashedPass })
   })
   /* Go to user profile update */
   .then(userFromDB => {
@@ -51,8 +52,8 @@ router.post('/signup', (req, res, next) => {
     }
     else if (error.code === 11000) {
       console.log(error);
-      console.log("Username must be unique. Username is already used. "); 
-      res.status(500).render("auth/signup", {errorMessage: "User already exists."});
+      console.log("email must be unique. Email is already used. "); 
+      res.status(500).render("auth/signup", {errorMessage: "Email already exists."});
     }
     else {
         next(error);

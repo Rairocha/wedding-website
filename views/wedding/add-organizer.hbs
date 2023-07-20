@@ -1,0 +1,12 @@
+<h2>Add Organizer</h2>
+
+<form action="/wedding/add-organizer/{{_id}}" method="post">
+
+    <label for="organizer">Organizers emails</label>
+    </br>
+    <!--input id="guests" type="file" name="guests"  accept=".txt"-->
+    <textarea id="organizer" name="organizer"  rows="10" cols="50">Write emails of organizers here</textarea>
+    <button type="submit">Add organizer</button>
+
+</form>
+<a href="/wedding/edit-guests/{{_id}}">Edit organizers</a>
