@@ -14,7 +14,6 @@ router.get('/signup', isLoggedOut, (req, res, next) => {
 })
 
 router.post('/signup', (req, res, next) => {
-  
   const { name, email, password } = req.body;
   
   if (!name || !email || !password) {
@@ -52,8 +51,8 @@ router.post('/signup', (req, res, next) => {
     }
     else if (error.code === 11000) {
       console.log(error);
-      console.log("email must be unique. Email is already used. "); 
-      res.status(500).render("auth/signup", {errorMessage: "Email already exists."});
+      console.log("Email must be unique. Email is already used. "); 
+      res.status(500).render("auth/signup", {errorMessage: "Email already registered."});
     }
     else {
         next(error);
