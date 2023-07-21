@@ -14,8 +14,8 @@ const { isLoggedIn, isLoggedOut ,isOwner, isOwnerOrGuest } = require('../middlew
 
 router.get('/', isLoggedIn,(req, res, next) => {
     Wedding.find({owner:req.session.user._id})
-    .then((foundWedding) => {       
-        res.render('wedding/all-weddings.hbs', { weddings: foundWedding, showNew:true,nguests:foundWedding.guests.length})
+    .then((foundWedding) => { 
+        res.render('wedding/all-weddings.hbs', { weddings: foundWedding, showNew:true})
     })
     .catch((err) => {
         console.log(err)
@@ -67,7 +67,10 @@ router.get('/details/:weddingId', isLoggedIn, isOwnerOrGuest, (req, res, next) =
     
     Wedding.findById(req.params.weddingId)
     .then((foundWedding) => {
-        res.render('wedding/view-wedding.hbs', {foundWedding:foundWedding,showEdit:foundWedding.owner.includes(req.session.user._id)})
+        var nguests;
+        if(foundWedding.guests){nguests=foundWedding.guests.length}
+        else{nguests=0}
+        res.render('wedding/view-wedding.hbs', {foundWedding:foundWedding,showEdit:foundWedding.owner.includes(req.session.user._id),nguests:nguests})
     })
     .catch((err) => {
         console.log(err)
