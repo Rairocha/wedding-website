@@ -169,7 +169,8 @@ router.get('/edit-guests/:weddingId',isLoggedIn, isOwner,(req, res, next) => {
     
     Wedding.findById(req.params.weddingId)
     .then((addGuestWedding) => {
-        var cleanGuest = addGuestWedding.guests.filter(function(m){m!='on'});
+
+        var cleanGuest = addGuestWedding.guests.filter(function(m){return m!='on'});
         console.log("Wedding to add:", {...cleanGuest})
         res.render('wedding/guest/edit-guests.hbs',{guests:{...cleanGuest},_id:req.params.weddingId,noGuest:cleanGuest.length>0})
     })
@@ -197,7 +198,7 @@ router.get('/delete-guests/:weddingId',isLoggedIn, isOwner,(req, res, next) => {
     
     Wedding.findById(req.params.weddingId)
     .then((addGuestWedding) => {
-        var cleanGuest = addGuestWedding.guests.filter(function(m){m!='on'});
+        var cleanGuest = addGuestWedding.guests.filter(function(m){return m!='on'});
         console.log("guest to delete:", {...cleanGuest})
         res.render('wedding/guest/delete-guests.hbs',{guests:{...cleanGuest},_id:req.params.weddingId,noGuest:cleanGuest.length>0})
     })
