@@ -6,3 +6,34 @@ body {
 a {
   color: #00B7FF;
 }
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+  align-items: center;
+  justify-items: space;
+}
+
+nav li {
+  float: left;
+  padding : 0 10px 0 10px;
+}
+
+ nav li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  justify-content: space-between;
+  flex-direction: column;
+  align-content: space-between;
+
+}
+/*
+Change the link color to #111 (black) on hover*/ 
+nav li a:hover {
+  background-color: #111;
+}

@@ -15,7 +15,7 @@ const { isLoggedIn, isLoggedOut ,isOwner, isOwnerOrGuest } = require('../middlew
 router.get('/', isLoggedIn,(req, res, next) => {
     Wedding.find({owner:req.session.user._id})
     .then((foundWedding) => {       
-        res.render('wedding/all-weddings.hbs', { weddings: foundWedding, showNew:true})
+        res.render('wedding/all-weddings.hbs', { weddings: foundWedding, showNew:true,nguests:foundWedding.guests.length})
     })
     .catch((err) => {
         console.log(err)

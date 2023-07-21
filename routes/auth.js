@@ -91,10 +91,17 @@ router.post('/login', (req, res, next) => {
     .catch(error => next(error));
 });
 
-router.post('/logout', (req, res, next) => {
+router.get('/logout', (req, res, next) => {
   req.session.destroy(err => {
     if (err) next(err);
     res.redirect('/');
   });
 });
+
+/*router.post('/logout', (req, res, next) => {
+  req.session.destroy(err => {
+    if (err) next(err);
+    res.redirect('/');
+  });
+});*/
 module.exports = router;
