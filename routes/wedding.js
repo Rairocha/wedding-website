@@ -169,8 +169,9 @@ router.get('/edit-guests/:weddingId',isLoggedIn, isOwner,(req, res, next) => {
     
     Wedding.findById(req.params.weddingId)
     .then((addGuestWedding) => {
-        console.log("Wedding to add:", {...addGuestWedding.guests})
-        res.render('wedding/guest/edit-guests.hbs',{guests:{...addGuestWedding.guests},_id:req.params.weddingId})
+        var cleanGuest = addGuestWedding.guests.filter(function(m){m!='on'});
+        console.log("Wedding to add:", {...cleanGuest})
+        res.render('wedding/guest/edit-guests.hbs',{guests:{...cleanGuest},_id:req.params.weddingId,noGuest:cleanGuest.length>0})
     })
     .catch((err) => {
         console.log(err)
