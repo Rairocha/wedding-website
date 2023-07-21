@@ -8,7 +8,9 @@
 <h2>Weddings you've been invited to</h2>
 {{/if}}
 {{#each weddings}}
-
+    <label for={{_id}}>RSVP</label>
+    <input type="checkbox" name={{this}} >
+    </br>
     <a href="/wedding/details/{{_id}}">
         <p>{{name}}</p> </a>
         <p>At the: {{location}}</p> 
