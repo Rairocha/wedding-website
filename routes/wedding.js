@@ -178,7 +178,6 @@ router.get('/edit-guests/:weddingId',isLoggedIn, isOwner,(req, res, next) => {
     })
 })
 router.post('/edit-guests/:weddingId',isLoggedIn, isOwner,(req, res, next) => {
-    console.log(Object.values(req.body))
     Wedding.findById(req.params.weddingId)
     .then((addGuestWedding) => {
         addGuestWedding.guests = [... new Set(Object.values(req.body))];
@@ -193,17 +192,23 @@ router.post('/edit-guests/:weddingId',isLoggedIn, isOwner,(req, res, next) => {
     })
 })
 
-router.get('/add-organizer/:weddingId', isLoggedIn, isOwner,(req, res, next) => {
-    res.render('wedding/add-organizer.hbs',{_id:req.params.weddingId})
-})
-
-router.post('/add-organizer/:weddingId', isLoggedIn, isOwner,(req, res, next) => {
-    console.log(Object.values(req.body))
+router.get('/delete-guests/:weddingId',isLoggedIn, isOwner,(req, res, next) => {
+    
     Wedding.findById(req.params.weddingId)
-    .then((addOrganizerWedding) => {
-        var listOrganizers = req.body.guests.toString().match(/^\S+@\S+\.\S+$/gm);
-        User.find({email:listOrganizers})
-    /*    addGuestWedding.guests = [... new Set(Object.values(req.body))];
+    .then((addGuestWedding) => {
+        var cleanGuest = addGuestWedding.guests.filter(function(m){m!='on'});
+        console.log("guest to delete:", {...cleanGuest})
+        res.render('wedding/guest/delete-guests.hbs',{guests:{...cleanGuest},_id:req.params.weddingId,noGuest:cleanGuest.length>0})
+    })
+    .catch((err) => {
+        console.log(err)
+        next(err)
+    })
+})
+router.post('/delete-guests/:weddingId',isLoggedIn, isOwner,(req, res, next) => {
+    Wedding.findById(req.params.weddingId)
+    .then((addGuestWedding) => {
+        addGuestWedding.guests = [... new Set(Object.values(req.body))];
         return addGuestWedding.save()         
         })
     .then((addGuestWedding) => {
@@ -211,7 +216,76 @@ router.post('/add-organizer/:weddingId', isLoggedIn, isOwner,(req, res, next) =>
         })
     .catch((err) => {
         console.log(err)
-        next(err)*/
+        next(err)
+    })
+})
+
+
+router.get('/add-organizer/:weddingId', isLoggedIn, isOwner,(req, res, next) => {
+    res.render('wedding/organizer/add-organizer.hbs',{_id:req.params.weddingId})
+})
+
+router.post('/add-organizer/:weddingId', isLoggedIn, isOwner,(req, res, next) => {
+    
+    Wedding.findById(req.params.weddingId)
+    .then((addOrganizerWedding) => {
+        var listOrganizers = req.body.organizer.toString().match(/^\S+@\S+\.\S+$/gm);
+        User.find({email:{ $in:listOrganizers}})
+        .then((usersFound)=>{
+            return usersFound.map(u=>u._id)})
+        .then((idList) => {
+            idList.forEach(element => {if(addOrganizerWedding.owner.includes(element)){} else{ addOrganizerWedding.owner.push(element)}});
+            addOrganizerWedding.owner = [... new Set(addOrganizerWedding.owner)];
+            return addOrganizerWedding.save()
+        })
+        .then((addOrganizerWedding) => {
+            res.redirect(`/wedding/remove-organizer/${req.params.weddingId}`)
+        })
+    .catch((err) => {
+        console.log(err)
+        next(err)
+        })
+    })
+})
+
+router.get('/remove-organizer/:weddingId',isLoggedIn, isOwner,(req, res, next) => {
+    
+    Wedding.findById(req.params.weddingId)
+    .populate('owner')
+    .then((editOrganizerWedding) => {
+        //console.log("owner to remove:",{owner:{...editOrganizerWedding.owner},weddingId:req.params.weddingId})
+        res.render('wedding/organizer/remove-organizer.hbs',{owner:{...editOrganizerWedding.owner},weddingId:req.params.weddingId})
+    })
+    .catch((err) => {
+        console.log(err)
+        next(err)
+    })
+})
+
+router.post('/remove-organizer/:weddingId',isLoggedIn, (req, res, next) => {
+    var ownersToRemove= Object.keys(req.body);
+    console.log(ownersToRemove)
+    Wedding.findById(req.params.weddingId)
+    .then((removeOwnerWedding) => {
+            
+             if(removeOwnerWedding.owner.length == ownersToRemove.length){
+                throw new Error ('Cannot remove all owners of event')
+             }
+             else{
+                ownersToRemove.forEach(o => removeOwnerWedding.owner.splice(removeOwnerWedding.owner.indexOf(o),1))
+                return removeOwnerWedding.save()
+             }
+        })
+    .then((removeOwnerWedding) => {
+        console.log(removeOwnerWedding)
+        res.redirect(`/wedding/remove-organizer/${req.params.weddingId}`)
+        })
+    .catch((err) => {
+        console.log(err)
+        res.render('wedding/organizer/remove-organizer.hbs', 
+        {   weddingId:req.params.weddingId,
+            errorMessage: err
+          });
     })
 })
 

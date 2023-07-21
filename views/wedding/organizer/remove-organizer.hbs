@@ -1,0 +1,17 @@
+<h2>Remove Organizer</h2>
+{{#if errorMessage}}
+{{errorMessage}}
+<button>
+<a href="/wedding/remove-organizer/{{weddingId}}">Remove Organizers</a>
+</button>
+{{else}}
+<form action="/wedding/remove-organizer/{{weddingId}}" method="post">
+{{#each owner}}
+    <label for={{this._id}}>Remove user {{this.name}} </br> with e-mail {{this.email}}</label>
+    <input type="checkbox" name={{this._id}} >
+    </br>
+
+{{/each}}
+    <button type="submit">Remove Organizers</button>
+</form>
+{{/if}}
